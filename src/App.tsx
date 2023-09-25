@@ -46,11 +46,16 @@ function App() {
       return [...prevTrips, { ...data, id: uuidV4(), tagsIds: tags.map(tag => tag.id) }]
     })
   }
+
+function addTag(tag: Tag) {
+  setTags(prev => [... prev, tag])
+}
+
   return (
     <Container className='my-4'>
       <Routes>
         <Route path="/" element={<h1>Home</h1>} />
-        <Route path="/new" element={<NewTrip onSubmit={onCreateTrip} />} />
+        <Route path="/new" element={<NewTrip onSubmit={onCreateTrip} onAddTag={addTag} availableTags={tags}/>} />
         <Route path='/:id'>
           <Route index element={<h1>Show</h1>} />
           <Route path='edit' element={<h1>Edit</h1>} />

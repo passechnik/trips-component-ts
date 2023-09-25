@@ -1,17 +1,20 @@
 import { FormEvent, useRef, useState } from 'react'
 import { Form, Stack, Row, Col, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import CreatableReactSelect from 'react-select'
+import CreatableSelect from 'react-select/creatable'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TripData, Tag } from './App';
+import { v4 as uuidV4 } from 'uuid'
 
 type TripFormProps = {
     onSubmit: (data: TripData) => void
+    onAddTag: (tag: Tag) => void
+    availableTags: Tag[]
 }
 
-export function TripForm({ onSubmit }: TripFormProps) {
+export function TripForm({ onSubmit, onAddTag, availableTags }: TripFormProps) {
     const titleRef = useRef<HTMLInputElement>(null)
     const notesRef = useRef<HTMLTextAreaElement>(null)
     const [selectedTags, setSelectedTags] = useState<Tag[]>([])
@@ -39,7 +42,16 @@ export function TripForm({ onSubmit }: TripFormProps) {
                     <Col>
                         <Form.Group controlId="tags">
                             <Form.Label>Tags</Form.Label>
-                            <CreatableReactSelect value={selectedTags.map(tag => {
+                            <CreatableSelect
+                            onCreateOption={label => {
+                                const newTag = { id: uuidV4(), label }
+                                onAddTag(newTag)
+                                setSelectedTags(prev => [...prev, newTag])
+                            }}
+                            value={selectedTags.map(tag => {
+                                return { label: tag.label, value: tag.id }
+                            })}
+                            options={availableTags.map(tag => {
                                 return { label: tag.label, value: tag.id }
                             })}
                             onChange={tags => {
