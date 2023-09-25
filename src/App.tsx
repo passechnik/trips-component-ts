@@ -43,7 +43,7 @@ function App() {
 
   function onCreateTrip({ tags, ...data }: TripData) {
     setTrips(prevTrips => {
-      return [...prevTrips, { ...data, id: uuidV4(), tagsIds: tags.map(tag => tag.id) }]
+      return [...prevTrips, { ...data, id: uuidV4(), tagIds: tags.map(tag => tag.id) }]
     })
   }
 
